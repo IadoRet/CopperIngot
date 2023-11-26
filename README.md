@@ -43,5 +43,5 @@ StringSearchRequest filter
           );
 
 //ISearchEngine.From() creates a new searching session that allows chaining of .Where() calls. 
-IEnumerable<ObjectToTest> query = _searchEngine.From(someQueryable).Where(filter).AsQueryable();
+IQueryable<SomeType> query = _searchEngine.From(someQueryable).Where(filter).AsQueryable();
 ```
