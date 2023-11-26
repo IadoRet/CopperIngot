@@ -8,7 +8,7 @@ Currently supported types for comparison:
 * String type
 * Guid as a custom filter builder
 
-Configuring:
+# Configuring:
 ```
 //You can define a custom alias. Can be used to avoid long nested property names (like Obj.Property1.Property2.Property3)
 SearchAlias alias = new SearchAlias("SomeAlias").WithPropertyOf<SomeType>(nameof(SomeType.StringProperty));
@@ -31,7 +31,9 @@ ISearchEngine searchEngine = new SearchEngine(configuration);
 
 `ISearchEngine` also allowes re-configuring with `.Configure()` method.
 
-Usage example:
+Also, you can implement your own filter builders for specific types and your own custom request types. For example look at `GuidFilterBuilder.cs` and `ObjectSearchRequest.cs`.
+
+# Usage example:
 ```
 StringSearchRequest filter
       = new(nameof(SomeType.StringProperty), //Property name or alias name
@@ -43,5 +45,3 @@ StringSearchRequest filter
 //ISearchEngine.From() creates a new searching session that allows chaining of .Where() calls. 
 IEnumerable<ObjectToTest> query = _searchEngine.From(someQueryable).Where(filter).AsQueryable();
 ```
-
-Also, you can implement your own filter builders for specific types and your own custom request types. For example look at `GuidFilterBuilder.cs` and `ObjectSearchRequest.cs`.
