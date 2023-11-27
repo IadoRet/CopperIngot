@@ -3,7 +3,7 @@ using CopperIngot.Interfaces;
 
 namespace CopperIngot.Requests;
 
-public readonly struct StringSearchRequest(
+public class StringSearchRequest(
     string property,
     string value,
     SearchComparison comparison,
