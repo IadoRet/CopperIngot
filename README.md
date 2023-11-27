@@ -6,7 +6,7 @@ Allows filtering IEnumerable and IQueryable collections by constructing expressi
 Currently supported types for comparison: 
 * All primitive types
 * `string`
-* `Guid`, `DateTime` and `DateOnly` as separate builders (can be added via `.WithDefaultBuilders()`)
+* `Guid`, `DateTime` and `DateOnly` as separate builders (could be added via `.WithDefaultBuilders()`)
 
 # Configuring:
 ```
