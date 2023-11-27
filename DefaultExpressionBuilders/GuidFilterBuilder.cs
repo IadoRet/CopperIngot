@@ -21,18 +21,13 @@ public class GuidFilterBuilder : IFilterBuilder<Guid>
         };
     }
 
-    public Guid ConvertValue(StringSearchRequest searchRequest)
+    public object ConvertValue(StringSearchRequest searchRequest)
     {
         return Guid.Parse((string)searchRequest.GetValue());
     }
 
-    public Guid ConvertValue(ObjectSearchRequest searchRequest)
+    public virtual object CustomConvertValue(ISearchRequest searchRequest)
     {
-        return (Guid)searchRequest.GetValue();
-    }
-
-    public virtual Guid CustomConvertValue(ISearchRequest searchRequest)
-    {
-        throw new NotImplementedException();
+        return searchRequest.GetValue();
     }
 }

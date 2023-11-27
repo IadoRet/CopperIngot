@@ -14,28 +14,21 @@ public interface IFilterBuilder<out T> : IFilterBuilderBase
     /// </summary>
     /// <param name="searchRequest">Search request</param>
     /// <returns>Converted value</returns>
-    T ConvertValue(StringSearchRequest searchRequest);
-
-    /// <summary>
-    /// Convert value from ObjectRequest (for specific cases only)
-    /// </summary>
-    /// <param name="searchRequest"></param>
-    /// <returns>Converted value</returns>
-    T ConvertValue(ObjectSearchRequest searchRequest);
-
+    object ConvertValue(StringSearchRequest searchRequest);
+    
     /// <summary>
     /// Converter for processing custom type requests
     /// </summary>
     /// <param name="searchRequest">Search request</param>
     /// <returns>Converted value</returns>
-    T CustomConvertValue(ISearchRequest searchRequest);
+    object CustomConvertValue(ISearchRequest searchRequest);
 
-    object? IFilterBuilderBase.ConvertValue(ISearchRequest searchRequest)
+    object IFilterBuilderBase.ConvertValue(ISearchRequest searchRequest)
     {        
         return searchRequest switch
         {
             StringSearchRequest stringSearchRequest => ConvertValue(stringSearchRequest),
-            ObjectSearchRequest objectSearchRequest => ConvertValue(objectSearchRequest),
+            ObjectSearchRequest objectSearchRequest => objectSearchRequest.GetValue(),
             _ => CustomConvertValue(searchRequest)
         };
     }
