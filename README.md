@@ -6,7 +6,7 @@ Allows filtering IEnumerable and IQueryable collections by constructing expressi
 Currently supported types for comparison: 
 * All primitive types
 * `string`
-* `Guid` as an optional builder
+* `Guid`, `DateTime` and `DateOnly` as separate builders (can be added via `.WithDefaultBuilders()` at configuration stage)
 
 `DateTime` and `DateOnly` types are currently in work.
 
@@ -31,7 +31,7 @@ SearchEngineConfiguration configuration = new SearchEngineConfiguration()
 ISearchEngine searchEngine = new SearchEngine(configuration);
 ```
 
-`ISearchEngine` also allowes re-configuring with `.Configure()` method.
+`ISearchEngine` also allows re-configuring with `.Configure()` method.
 
 Also, you can implement your own filter builders for specific types and your own custom request types. For example look at `GuidFilterBuilder.cs` and `ObjectSearchRequest.cs` implementation.
 

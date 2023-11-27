@@ -1,4 +1,5 @@
-﻿using CopperIngot.Interfaces;
+﻿using CopperIngot.DefaultExpressionBuilders;
+using CopperIngot.Interfaces;
 
 namespace CopperIngot.SearchEngine;
 
@@ -20,6 +21,19 @@ public class SearchEngineConfiguration
     public SearchEngineConfiguration WithFilterBuilder<T>(IFilterBuilder<T> filterBuilder)
     {
         _expressionBuilders.Add(typeof(T), filterBuilder);
+        return this;
+    }
+
+    /// <summary>
+    /// Use all explicitly supported types for comparison
+    /// </summary>
+    /// <returns>This instance</returns>
+    public SearchEngineConfiguration WithDefaultBuilders()
+    {
+        _expressionBuilders.Add(typeof(Guid), new GuidFilterBuilder());
+        _expressionBuilders.Add(typeof(DateTime), new DateTimeFilterBuilder());
+        _expressionBuilders.Add(typeof(DateOnly), new DateOnlyFilterBuilder());
+
         return this;
     }
 

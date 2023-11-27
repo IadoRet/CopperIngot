@@ -15,13 +15,13 @@ public interface IFilterBuilder<out T> : IFilterBuilderBase
     /// <param name="searchRequest">Search request</param>
     /// <returns>Converted value</returns>
     object ConvertValue(StringSearchRequest searchRequest);
-    
+
     /// <summary>
     /// Converter for processing custom type requests
     /// </summary>
     /// <param name="searchRequest">Search request</param>
     /// <returns>Converted value</returns>
-    object CustomConvertValue(ISearchRequest searchRequest);
+    object CustomConvertValue(ISearchRequest searchRequest) => searchRequest.GetValue();
 
     object IFilterBuilderBase.ConvertValue(ISearchRequest searchRequest)
     {        

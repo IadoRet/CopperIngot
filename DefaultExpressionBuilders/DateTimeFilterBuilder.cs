@@ -5,7 +5,7 @@ using CopperIngot.Requests;
 
 namespace CopperIngot.DefaultExpressionBuilders;
 
-public class GuidFilterBuilder : IFilterBuilder<Guid>
+public class DateTimeFilterBuilder : IFilterBuilder<DateTime>
 {
     public Expression BuildExpressionTree(Expression dataExpression, Expression valueExpression, ISearchRequest searchRequest)
     {
@@ -23,6 +23,6 @@ public class GuidFilterBuilder : IFilterBuilder<Guid>
 
     public object ConvertValue(StringSearchRequest searchRequest)
     {
-        return Guid.Parse((string)searchRequest.GetValue());
+        return DateTime.Parse((string)searchRequest.GetValue());
     }
 }
