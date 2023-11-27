@@ -5,8 +5,10 @@ Allows filtering IEnumerable and IQueryable collections by constructing expressi
 
 Currently supported types for comparison: 
 * All primitive types
-* String type
-* Guid as a custom filter builder
+* `string`
+* `Guid` as an optional builder
+
+`DateTime` and `DateOnly` types are currently in work.
 
 # Configuring:
 ```
@@ -25,13 +27,13 @@ SearchEngineConfiguration configuration = new SearchEngineConfiguration()
                                               .UseAliases();
                                               
 //Search engine can be injected via some DI instrumetns or used like this.
-//Note: If you are using caching option - inject as a singleton.
+//Note: If you are using caching option - inject it as a singleton.
 ISearchEngine searchEngine = new SearchEngine(configuration);
 ```
 
 `ISearchEngine` also allowes re-configuring with `.Configure()` method.
 
-Also, you can implement your own filter builders for specific types and your own custom request types. For example look at `GuidFilterBuilder.cs` and `ObjectSearchRequest.cs`.
+Also, you can implement your own filter builders for specific types and your own custom request types. For example look at `GuidFilterBuilder.cs` and `ObjectSearchRequest.cs` implementation.
 
 # Usage example:
 ```
