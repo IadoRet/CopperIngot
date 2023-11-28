@@ -35,5 +35,5 @@ public class QueryableSearchSession<T>(IQueryable<T> query, SearchEngine searchE
     /// Get query with applied filters
     /// </summary>
     /// <returns>Built query</returns>
-    public IEnumerable<T> AsQueryable() => query;
+    public IQueryable<T> AsQueryable() => query;
 }
