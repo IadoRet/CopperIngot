@@ -22,6 +22,16 @@ public class EnumerableSearchSession<T>(IEnumerable<T> enumerable, SearchEngine 
     }
 
     /// <summary>
+    /// Default .Select() behavior
+    /// </summary>
+    /// <param name="func">Selector function</param>
+    /// <returns>A new session instance</returns>
+    public EnumerableSearchSession<TNew> Select<TNew>(Func<T, TNew> func)
+    {
+        return searchEngine.From(enumerable.Select(func));
+    }
+
+    /// <summary>
     /// Default .FirstOrDefault() behavior
     /// </summary>
     /// <param name="searchRequest">Search request</param>

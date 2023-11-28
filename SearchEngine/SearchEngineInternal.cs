@@ -43,7 +43,7 @@ internal static class SearchEngineInternal
         ConstantExpression valueExpression = Expression.Constant(value, typeof(object));
         Expression convertedParameter = comparableType.IsValueType
             ? Expression.Unbox(valueExpression, comparableType)
-            : Expression.TypeAs(valueExpression, comparableType);
+            : Expression.Convert(valueExpression, comparableType);
 
         Expression? comparisonExpression = null;
         

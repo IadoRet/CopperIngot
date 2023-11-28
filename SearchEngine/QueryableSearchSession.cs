@@ -1,4 +1,5 @@
-﻿using CopperIngot.Interfaces;
+﻿using System.Linq.Expressions;
+using CopperIngot.Interfaces;
 
 namespace CopperIngot.SearchEngine;
 
@@ -19,6 +20,16 @@ public class QueryableSearchSession<T>(IQueryable<T> query, SearchEngine searchE
     {
         query = searchEngine.Where(query, searchRequest);
         return this;
+    }
+
+    /// <summary>
+    /// Default .Select() behavior
+    /// </summary>
+    /// <param name="expression">Select expression</param>
+    /// <returns>A new session instance</returns>
+    public QueryableSearchSession<TNew> Select<TNew>(Expression<Func<T, TNew>> expression)
+    {
+        return searchEngine.From(query.Select(expression));
     }
 
     /// <summary>
