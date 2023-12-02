@@ -57,7 +57,7 @@ internal static class SearchEngineInternal
         }
         else if (comparableType == typeof(string))
         {
-            comparisonExpression = BuildStringExpression(comparableExpression, convertedParameter, request);
+            comparisonExpression = BuildStringExpression(comparableExpression, convertedParameter, request, true);
         }
 
         if (comparisonExpression is null)
@@ -111,7 +111,8 @@ internal static class SearchEngineInternal
     private static Expression BuildStringExpression(
         Expression comparableExpression,
         Expression parameterExpression,
-        ISearchRequest request)
+        ISearchRequest request,
+        bool isQueryable = false)
     {
         StringComparison stringComparison = request is StringSearchRequest stringSearchRequest
             ? stringSearchRequest.StringComparison
@@ -121,12 +122,12 @@ internal static class SearchEngineInternal
         {
             case SearchComparison.Equals:
             {
-                if(stringComparison is StringComparison.Ordinal)
+                if(stringComparison is StringComparison.Ordinal || isQueryable)
                     return Expression.Equal(comparableExpression, parameterExpression);
                 
                 MethodInfo stringEqualsMethod = typeof(string).GetMethods()
                     .Single(m => m.Name == nameof(string.Equals) && m.GetParameters().Length == 3);
-
+                    
                 ConstantExpression comparisonConstantExpression = Expression.Constant(stringComparison, typeof(StringComparison));
                 
                 MethodCallExpression equalsCallExpression = Expression.Call(stringEqualsMethod,
@@ -138,7 +139,7 @@ internal static class SearchEngineInternal
             }
             case SearchComparison.NotEquals:            
             {
-                if(stringComparison is StringComparison.Ordinal)
+                if(stringComparison is StringComparison.Ordinal || isQueryable)
                     return Expression.NotEqual(comparableExpression, parameterExpression);
                 
                 MethodInfo stringEqualsMethod = typeof(string).GetMethods()
@@ -156,11 +157,23 @@ internal static class SearchEngineInternal
             case SearchComparison.Contains:
             case SearchComparison.NotContains:
             {
-                MethodInfo containsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string), typeof(StringComparison) })!;
+                Type[] methodParameters = isQueryable
+                    ? new[] { typeof(string) }
+                    : new[] { typeof(string), typeof(StringComparison) };
                 
-                ConstantExpression comparisonConstantExpression = Expression.Constant(stringComparison, typeof(StringComparison));
+                MethodInfo containsMethod = typeof(string).GetMethod(nameof(string.Contains), methodParameters)!;
+
+                Expression containsExpression;
+                if (isQueryable)
+                {
+                    containsExpression = Expression.Call(comparableExpression, containsMethod, parameterExpression);
+                }
+                else
+                {
+                    ConstantExpression comparisonConstantExpression = Expression.Constant(stringComparison, typeof(StringComparison));
                 
-                Expression containsExpression = Expression.Call(comparableExpression, containsMethod, parameterExpression, comparisonConstantExpression);
+                    containsExpression = Expression.Call(comparableExpression, containsMethod, parameterExpression, comparisonConstantExpression);
+                }
 
                 return request.Comparison is SearchComparison.Contains
                     ? containsExpression
