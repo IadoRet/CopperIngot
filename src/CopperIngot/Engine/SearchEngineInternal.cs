@@ -122,6 +122,9 @@ internal static class SearchEngineInternal
         {
             case SearchComparison.Equals:
             {
+                if (isQueryable && IsCaseInsensitive(stringComparison))
+                    return BuildQueryableCaseInsensitiveEqualsExpression(comparableExpression, parameterExpression);
+
                 if(stringComparison is StringComparison.Ordinal || isQueryable)
                     return Expression.Equal(comparableExpression, parameterExpression);
                 
@@ -139,6 +142,9 @@ internal static class SearchEngineInternal
             }
             case SearchComparison.NotEquals:            
             {
+                if (isQueryable && IsCaseInsensitive(stringComparison))
+                    return Expression.Not(BuildQueryableCaseInsensitiveEqualsExpression(comparableExpression, parameterExpression));
+
                 if(stringComparison is StringComparison.Ordinal || isQueryable)
                     return Expression.NotEqual(comparableExpression, parameterExpression);
                 
@@ -166,6 +172,14 @@ internal static class SearchEngineInternal
                 Expression containsExpression;
                 if (isQueryable)
                 {
+                    if (IsCaseInsensitive(stringComparison))
+                    {
+                        containsExpression = BuildQueryableCaseInsensitiveContainsExpression(comparableExpression, parameterExpression, containsMethod);
+                        return request.Comparison is SearchComparison.Contains
+                            ? containsExpression
+                            : Expression.Not(containsExpression);
+                    }
+
                     containsExpression = Expression.Call(comparableExpression, containsMethod, parameterExpression);
                 }
                 else
@@ -186,6 +200,48 @@ internal static class SearchEngineInternal
             default:
                 throw new ArgumentOutOfRangeException(nameof(request.Comparison));
         }
+    }
+
+    private static Expression BuildQueryableCaseInsensitiveEqualsExpression(
+        Expression comparableExpression,
+        Expression parameterExpression)
+    {
+        BinaryExpression comparableIsNull = Expression.Equal(comparableExpression, Expression.Constant(null, typeof(string)));
+        BinaryExpression parameterIsNull = Expression.Equal(parameterExpression, Expression.Constant(null, typeof(string)));
+        BinaryExpression comparableIsNotNull = Expression.NotEqual(comparableExpression, Expression.Constant(null, typeof(string)));
+        BinaryExpression parameterIsNotNull = Expression.NotEqual(parameterExpression, Expression.Constant(null, typeof(string)));
+
+        return Expression.OrElse(
+            Expression.AndAlso(comparableIsNull, parameterIsNull),
+            Expression.AndAlso(
+                Expression.AndAlso(comparableIsNotNull, parameterIsNotNull),
+                Expression.Equal(ToLower(comparableExpression), ToLower(parameterExpression))));
+    }
+
+    private static Expression BuildQueryableCaseInsensitiveContainsExpression(
+        Expression comparableExpression,
+        Expression parameterExpression,
+        MethodInfo containsMethod)
+    {
+        BinaryExpression comparableIsNotNull = Expression.NotEqual(comparableExpression, Expression.Constant(null, typeof(string)));
+        BinaryExpression parameterIsNotNull = Expression.NotEqual(parameterExpression, Expression.Constant(null, typeof(string)));
+
+        return Expression.AndAlso(
+            Expression.AndAlso(comparableIsNotNull, parameterIsNotNull),
+            Expression.Call(ToLower(comparableExpression), containsMethod, ToLower(parameterExpression)));
+    }
+
+    private static MethodCallExpression ToLower(Expression expression)
+    {
+        MethodInfo toLowerMethod = typeof(string).GetMethod(nameof(string.ToLower), Type.EmptyTypes)!;
+        return Expression.Call(expression, toLowerMethod);
+    }
+
+    private static bool IsCaseInsensitive(StringComparison stringComparison)
+    {
+        return stringComparison is StringComparison.CurrentCultureIgnoreCase
+            or StringComparison.InvariantCultureIgnoreCase
+            or StringComparison.OrdinalIgnoreCase;
     }
 
     private static BinaryExpression BuildPrimitiveExpression(
