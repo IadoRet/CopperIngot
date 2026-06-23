@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using CopperIngot.Interfaces;
+using CopperIngot.Models;
 using CopperIngot.Requests;
 
 namespace CopperIngot.Engine;

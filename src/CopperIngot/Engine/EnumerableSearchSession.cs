@@ -10,14 +10,16 @@ namespace CopperIngot.Engine;
 /// <typeparam name="T">Type of the collection</typeparam>
 public class EnumerableSearchSession<T>(IEnumerable<T> enumerable, SearchEngine searchEngine)
 {
+    private IEnumerable<T> _enumerable = enumerable;
+
     /// <summary>
     /// Default .Where() behavior
     /// </summary>
     /// <param name="searchRequest">Search request</param>
-    /// <returns>This instance. Use .AsEnumerable() to get filtered query</returns>
+    /// <returns>This instance. Use .AsEnumerable() to get a filtered query</returns>
     public EnumerableSearchSession<T> Where(ISearchRequest searchRequest)
     {
-        enumerable = searchEngine.Where(enumerable, searchRequest);
+        _enumerable = searchEngine.Where(_enumerable, searchRequest);
         return this;
     }
 
@@ -28,7 +30,7 @@ public class EnumerableSearchSession<T>(IEnumerable<T> enumerable, SearchEngine 
     /// <returns>A new session instance</returns>
     public EnumerableSearchSession<TNew> Select<TNew>(Func<T, TNew> func)
     {
-        return searchEngine.From(enumerable.Select(func));
+        return searchEngine.From(_enumerable.Select(func));
     }
 
     /// <summary>
@@ -38,12 +40,12 @@ public class EnumerableSearchSession<T>(IEnumerable<T> enumerable, SearchEngine 
     /// <returns>First match or null</returns>
     public T? FirstOrDefault(ISearchRequest searchRequest)
     {
-        return searchEngine.FirstOrDefault(enumerable, searchRequest);
+        return searchEngine.FirstOrDefault(_enumerable, searchRequest);
     }
 
     /// <summary>
     /// Get query with applied filters
     /// </summary>
     /// <returns>Built query</returns>
-    public IEnumerable<T> AsEnumerable() => enumerable;
+    public IEnumerable<T> AsEnumerable() => _enumerable;
 }

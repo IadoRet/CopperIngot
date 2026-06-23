@@ -8,12 +8,12 @@ namespace CopperIngot.Interfaces;
 public interface ISearchEngine
 {
     /// <summary>
-    /// Start new search session for IEnumerable
+    /// Start a new search session for IEnumerable
     /// </summary>
     EnumerableSearchSession<T> From<T>(IEnumerable<T> enumerable);
 
     /// <summary>
-    /// Start new search session for IQueryable
+    /// Start a new search session for IQueryable
     /// </summary>
     QueryableSearchSession<T> From<T>(IQueryable<T> query);
 

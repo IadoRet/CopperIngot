@@ -11,6 +11,8 @@ namespace CopperIngot.Engine;
 /// <typeparam name="T">Type of the collection</typeparam>
 public class QueryableSearchSession<T>(IQueryable<T> query, SearchEngine searchEngine)
 {
+    private IQueryable<T> _query = query;
+
     /// <summary>
     /// Default .Where() behavior
     /// </summary>
@@ -18,7 +20,7 @@ public class QueryableSearchSession<T>(IQueryable<T> query, SearchEngine searchE
     /// <returns>This instance. Use .AsQueryable() to get filtered query</returns>
     public QueryableSearchSession<T> Where(ISearchRequest searchRequest)
     {
-        query = searchEngine.Where(query, searchRequest);
+        _query = searchEngine.Where(_query, searchRequest);
         return this;
     }
 
@@ -29,7 +31,7 @@ public class QueryableSearchSession<T>(IQueryable<T> query, SearchEngine searchE
     /// <returns>A new session instance</returns>
     public QueryableSearchSession<TNew> Select<TNew>(Expression<Func<T, TNew>> expression)
     {
-        return searchEngine.From(query.Select(expression));
+        return searchEngine.From(_query.Select(expression));
     }
 
     /// <summary>
@@ -39,12 +41,12 @@ public class QueryableSearchSession<T>(IQueryable<T> query, SearchEngine searchE
     /// <returns>First match or null</returns>
     public T? FirstOrDefault(ISearchRequest searchRequest)
     {
-        return searchEngine.FirstOrDefault(query, searchRequest);
+        return searchEngine.FirstOrDefault(_query, searchRequest);
     }
 
     /// <summary>
-    /// Get query with applied filters
+    /// Get a query with applied filters
     /// </summary>
     /// <returns>Built query</returns>
-    public IQueryable<T> AsQueryable() => query;
+    public IQueryable<T> AsQueryable() => _query;
 }

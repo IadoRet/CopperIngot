@@ -1,6 +1,6 @@
 ﻿using CopperIngot.Interfaces;
 
-namespace CopperIngot.Engine;
+namespace CopperIngot.Models;
 
 internal class CachedFilter<T>(Func<T, object?, bool> filter, Type comparableType) : ICachedFilter
 {

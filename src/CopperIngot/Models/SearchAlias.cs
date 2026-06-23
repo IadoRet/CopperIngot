@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using CopperIngot.Interfaces;
 
-namespace CopperIngot.Engine;
+namespace CopperIngot.Models;
 
 /// <summary>
 /// Alias for property.

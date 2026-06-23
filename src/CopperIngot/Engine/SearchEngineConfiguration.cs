@@ -1,5 +1,6 @@
 ﻿using CopperIngot.DefaultExpressionBuilders;
 using CopperIngot.Interfaces;
+using CopperIngot.Models;
 
 namespace CopperIngot.Engine;
 
