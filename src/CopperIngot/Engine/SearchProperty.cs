@@ -2,7 +2,7 @@
 using CopperIngot.Exceptions;
 using CopperIngot.Interfaces;
 
-namespace CopperIngot.SearchEngine;
+namespace CopperIngot.Engine;
 
 internal class SearchProperty<T> : ISearchProperty
 {

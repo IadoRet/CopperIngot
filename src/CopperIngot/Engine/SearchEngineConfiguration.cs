@@ -1,7 +1,7 @@
 ﻿using CopperIngot.DefaultExpressionBuilders;
 using CopperIngot.Interfaces;
 
-namespace CopperIngot.SearchEngine;
+namespace CopperIngot.Engine;
 
 /// <summary>
 /// Search engine configuration

@@ -6,7 +6,7 @@ using System.Reflection;
 using CopperIngot.Interfaces;
 using CopperIngot.Requests;
 
-namespace CopperIngot.SearchEngine;
+namespace CopperIngot.Engine;
 
 public class SearchEngine : ISearchEngine
 {

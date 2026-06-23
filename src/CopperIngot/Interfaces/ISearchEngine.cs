@@ -1,4 +1,4 @@
-﻿using CopperIngot.SearchEngine;
+﻿using CopperIngot.Engine;
 
 namespace CopperIngot.Interfaces;
 

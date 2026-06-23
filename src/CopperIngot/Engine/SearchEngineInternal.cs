@@ -5,7 +5,7 @@ using CopperIngot.Exceptions;
 using CopperIngot.Interfaces;
 using CopperIngot.Requests;
 
-namespace CopperIngot.SearchEngine;
+namespace CopperIngot.Engine;
 
 internal static class SearchEngineInternal
 {
